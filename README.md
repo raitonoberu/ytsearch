@@ -20,21 +20,21 @@ Please note that the API is not yet final and may change in the future.
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/raitonoberu/ytsearch"
+    "encoding/json"
+    "fmt"
+    "github.com/raitonoberu/ytsearch"
 )
 
 func main() {
-	search := ytsearch.VideoSearch("ncs")
-	search.Limit = 2
-	result, err := search.Next()
-	if err != nil {
-		panic(err)
-	}
+    search := ytsearch.VideoSearch("ncs")
+    search.Limit = 2
+    result, err := search.Next()
+    if err != nil {
+        panic(err)
+    }
 
-	jsonstr, _ := json.Marshal(result.Videos)
-	fmt.Println(string(jsonstr))
+    jsonstr, _ := json.Marshal(result.Videos)
+    fmt.Println(string(jsonstr))
 }
 ```
 <details>
@@ -124,21 +124,21 @@ func main() {
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/raitonoberu/ytsearch"
+    "encoding/json"
+    "fmt"
+    "github.com/raitonoberu/ytsearch"
 )
 
 func main() {
-	search := ytsearch.ChannelSearch("ncs")
-	search.Limit = 2
-	result, err := search.Next()
-	if err != nil {
-		panic(err)
-	}
+    search := ytsearch.ChannelSearch("ncs")
+    search.Limit = 2
+    result, err := search.Next()
+    if err != nil {
+        panic(err)
+    }
 
-	jsonstr, _ := json.Marshal(result.Channels)
-	fmt.Println(string(jsonstr))
+    jsonstr, _ := json.Marshal(result.Channels)
+    fmt.Println(string(jsonstr))
 }
 ```
 <details>
@@ -196,21 +196,21 @@ func main() {
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/raitonoberu/ytsearch"
+    "encoding/json"
+    "fmt"
+    "github.com/raitonoberu/ytsearch"
 )
 
 func main() {
-	search := ytsearch.PlaylistSearch("ncs")
-	search.Limit = 2
-	result, err := search.Next()
-	if err != nil {
-		panic(err)
-	}
+    search := ytsearch.PlaylistSearch("ncs")
+    search.Limit = 2
+    result, err := search.Next()
+    if err != nil {
+        panic(err)
+    }
 
-	jsonstr, _ := json.Marshal(result.Playlists)
-	fmt.Println(string(jsonstr))
+    jsonstr, _ := json.Marshal(result.Playlists)
+    fmt.Println(string(jsonstr))
 }
 ```
 <details>
@@ -294,20 +294,20 @@ func main() {
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/raitonoberu/ytsearch"
+    "encoding/json"
+    "fmt"
+    "github.com/raitonoberu/ytsearch"
 )
 
 func main() {
-	search := ytsearch.Search("ncs")
-	result, err := search.Next()
-	if err != nil {
-		panic(err)
-	}
+    search := ytsearch.Search("ncs")
+    result, err := search.Next()
+    if err != nil {
+        panic(err)
+    }
 
-	jsonstr, _ := json.Marshal(result)
-	fmt.Println(string(jsonstr))
+    jsonstr, _ := json.Marshal(result)
+    fmt.Println(string(jsonstr))
 }
 ```
 <details>
@@ -1772,25 +1772,25 @@ func main() {
 package main
 
 import (
-	"encoding/json"
-	"fmt"
-	"github.com/raitonoberu/ytsearch"
+    "encoding/json"
+    "fmt"
+    "github.com/raitonoberu/ytsearch"
 )
 
 func main() {
-	search := ytsearch.VideoSearch("ncs")
-	search.Limit = 2
+    search := ytsearch.VideoSearch("ncs")
+    search.Limit = 2
 
-	// search.SearchFilter = ytsearch.VideoFilter
-	search.SortOrder = ytsearch.ViewCountOrder
+    // search.SearchFilter = ytsearch.VideoFilter
+    search.SortOrder = ytsearch.ViewCountOrder
 
-	result, err := search.Next()
-	if err != nil {
-		panic(err)
-	}
+    result, err := search.Next()
+    if err != nil {
+        panic(err)
+    }
 
-	jsonstr, _ := json.Marshal(result.Videos)
-	fmt.Println(string(jsonstr))
+    jsonstr, _ := json.Marshal(result.Videos)
+    fmt.Println(string(jsonstr))
 }
 ```
 <details>
