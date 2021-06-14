@@ -1,10 +1,6 @@
 // Package ytsearch: search for YouTube videos, channels & playlists. Without YouTube Data API.
 package ytsearch
 
-// TODO:
-// • Better exceptions handling
-// • Extra features
-
 // Search creates a new SearchClient with default parameters.
 func Search(query string) *SearchClient {
 	return &SearchClient{
