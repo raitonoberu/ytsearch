@@ -1,4 +1,4 @@
-package youtube_search
+package ytsearch
 
 var requestHeader = map[string][]string{
 	"Content-Type": {"application/json; charset=utf-8"},

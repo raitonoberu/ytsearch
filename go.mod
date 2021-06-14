@@ -1,3 +1,3 @@
-module github.com/raitonoberu/youtube_search
+module github.com/raitonoberu/ytsearch
 
 go 1.16

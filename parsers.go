@@ -1,4 +1,4 @@
-package youtube_search
+package ytsearch
 
 import (
 	"reflect"

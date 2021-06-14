@@ -1,4 +1,5 @@
-package youtube_search
+// Package ytsearch: search for YouTube videos, channels & playlists. Without YouTube Data API.
+package ytsearch
 
 // TODO:
 // • Better exceptions handling
