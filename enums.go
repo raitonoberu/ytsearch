@@ -27,11 +27,11 @@ const (
 	RelevanceOrder SortOrder = "CAA"
 
 	// UploadDateOrder will sort results by upload date.
-	UploadDateOrder SortOrder = "CIA"
+	UploadDateOrder SortOrder = "CAI"
 
 	// ViewCountOrder will sort results by view count.
-	ViewCountOrder SortOrder = "CMA"
+	ViewCountOrder SortOrder = "CAM"
 
 	// RatingOrder will sort results by rating.
-	RatingOrder SortOrder = "CEA"
+	RatingOrder SortOrder = "CAE"
 )
