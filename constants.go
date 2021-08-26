@@ -16,10 +16,10 @@ const shelfElementKey = "shelfRenderer"
 const richItemKey = "richItemRenderer"
 const continuationItemKey = "continuationItemRenderer"
 
-var contentPath = []interface{}{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents"}
+var contentPath = path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents"}
 
-var fallbackContentPath = []interface{}{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "richGridRenderer", "contents"}
+var fallbackContentPath = path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "richGridRenderer", "contents"}
 
-var continuationContentPath = []interface{}{"onResponseReceivedCommands", 0, "appendContinuationItemsAction", "continuationItems"}
+var continuationContentPath = path{"onResponseReceivedCommands", 0, "appendContinuationItemsAction", "continuationItems"}
 
-var continuationKeyPath = []interface{}{"continuationItemRenderer", "continuationEndpoint", "continuationCommand", "token"}
+var continuationKeyPath = path{"continuationItemRenderer", "continuationEndpoint", "continuationCommand", "token"}

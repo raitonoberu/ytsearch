@@ -116,7 +116,7 @@ func (search *SearchClient) parseSource(
 	if responseContent != nil {
 		for _, element := range responseContentMaps {
 			if _, ok := element[itemSectionKey]; ok {
-				newSource := getValue(element, []interface{}{itemSectionKey, "contents"}).([]interface{})
+				newSource := getValue(element, path{itemSectionKey, "contents"}).([]interface{})
 				// converting []interface{} to []map[string]interface{}
 				responseSource = responseSource[:0]
 				for _, value := range newSource {
@@ -133,7 +133,7 @@ func (search *SearchClient) parseSource(
 	}
 
 	estimatedResults, _ := strconv.Atoi(
-		getValue(response, []interface{}{"estimatedResults"}).(string),
+		getValue(response, path{"estimatedResults"}).(string),
 	)
 
 	return responseSource, estimatedResults, nil
