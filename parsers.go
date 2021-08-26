@@ -1,7 +1,6 @@
 package ytsearch
 
 import (
-	"reflect"
 	"strconv"
 )
 
@@ -11,15 +10,15 @@ func getValue(source interface{}, path path) interface{} {
 	value := source
 	for _, element := range path {
 		mustBreak := false
-		switch reflect.TypeOf(element).Kind() {
-		case reflect.String:
+		switch element.(type) {
+		case string:
 			if val, ok := value.(map[string]interface{})[element.(string)]; ok {
 				value = val
 			} else {
 				value = nil
 				mustBreak = true
 			}
-		case reflect.Int:
+		case int:
 			if len(value.([]interface{})) != 0 {
 				value = value.([]interface{})[element.(int)]
 			} else {
