@@ -1,6 +1,8 @@
 // Package ytsearch: search for YouTube videos, channels & playlists. Without YouTube Data API.
 package ytsearch
 
+import "net/http"
+
 // Search creates a new SearchClient with default parameters.
 func Search(query string) *SearchClient {
 	return &SearchClient{
@@ -15,6 +17,7 @@ func Search(query string) *SearchClient {
 		FindPlaylists:   true,
 		FindShelves:     true,
 		FindSuggestions: true,
+		HTTPClient:      &http.Client{},
 	}
 }
 
@@ -28,6 +31,7 @@ func VideoSearch(query string) *SearchClient {
 		SearchFilter: VideoFilter,
 		SortOrder:    RelevanceOrder,
 		FindVideos:   true,
+		HTTPClient:   &http.Client{},
 	}
 }
 
@@ -41,6 +45,7 @@ func ChannelSearch(query string) *SearchClient {
 		SearchFilter: ChannelFilter,
 		SortOrder:    RelevanceOrder,
 		FindChannels: true,
+		HTTPClient:   &http.Client{},
 	}
 }
 
@@ -54,5 +59,6 @@ func PlaylistSearch(query string) *SearchClient {
 		SearchFilter:  PlaylistFilter,
 		SortOrder:     RelevanceOrder,
 		FindPlaylists: true,
+		HTTPClient:    &http.Client{},
 	}
 }

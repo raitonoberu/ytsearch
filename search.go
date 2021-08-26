@@ -28,6 +28,8 @@ type SearchClient struct {
 	FindShelves     bool
 	FindSuggestions bool
 
+	HTTPClient *http.Client
+
 	continuationKey string
 }
 
@@ -68,8 +70,7 @@ func (search *SearchClient) makeRequest() (map[string]interface{}, error) {
 		return nil, err
 	}
 	request.Header = requestHeader
-	client := &http.Client{}
-	response, err := client.Do(request)
+	response, err := search.HTTPClient.Do(request)
 	if err != nil {
 		return nil, err
 	}
