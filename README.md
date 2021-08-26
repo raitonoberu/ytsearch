@@ -1872,14 +1872,6 @@ func main() {
 
 Pull requests are welcome. I'm relatively new to Golang, and I want to see the best practices used in this project.
 
-Only the main functions have been ported. There is a long way to go.
-
-### TODO:
-- Better exceptions handling
-- Add example file
-- Add tests
-- Add missing features from youtube-search-python (video & playlist information, search suggestions)
-
 ## License
 
 **MIT License**, see [LICENSE](./LICENSE) file for additional information.
