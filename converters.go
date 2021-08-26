@@ -19,8 +19,13 @@ func durationToInt(duration interface{}) int {
 
 // viewCountToInt converts the view count string ("32,519 views") to int (32519).
 func viewCountToInt(viewCount interface{}) int {
-	items := strings.Split(strings.Split(viewCount.(string), " ")[0], ",")
-	str := strings.Join(items, "")
+	// viewCount can be either (1) "100,000 views" or (2) "100 000 views"
+	str := strings.Split(viewCount.(string), " ")[0]
+	// (1) separated by comma (U+002C)
+	str = strings.ReplaceAll(str, ",", "")
+	// (2) separated by no-break space (U+00A0)
+	str = strings.ReplaceAll(str, "\u00A0", "")
+
 	result, _ := strconv.Atoi(str)
 	return result
 }
