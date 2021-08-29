@@ -74,6 +74,7 @@ func (search *SearchClient) makeRequest() (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer response.Body.Close()
 	text, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
