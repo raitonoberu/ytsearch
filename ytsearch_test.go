@@ -9,7 +9,7 @@ func TestSearch(t *testing.T) {
 	search := Search("ncs")
 	result, err := search.Next()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if result.EstimatedResults == 0 {
@@ -41,7 +41,7 @@ func TestVideoSearch(t *testing.T) {
 	search := VideoSearch("GopherCon 2020")
 	result, err := search.Next()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if len(result.Videos) != 20 {
@@ -71,7 +71,7 @@ func TestPlaylistSearch(t *testing.T) {
 	search := PlaylistSearch("Music playlist")
 	result, err := search.Next()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if len(result.Playlists) != 20 {
@@ -88,7 +88,7 @@ func TestRegionLanguage(t *testing.T) {
 	search.Language = "ru"
 	result, err := search.Next()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 
 	if len(result.Videos) == 0 {
@@ -107,14 +107,14 @@ func TestSortOrder(t *testing.T) {
 
 	result1, err := search1.Next()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	if len(result1.Videos) == 0 {
 		t.Error("len(result1.Videos) == 0")
 	}
 	result2, err := search2.Next()
 	if err != nil {
-		t.Error(err)
+		t.Fatal(err)
 	}
 	if len(result2.Videos) == 0 {
 		t.Error("len(result2.Videos) == 0")
