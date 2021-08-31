@@ -44,14 +44,14 @@ func parseSource(
 		if content != nil {
 			responseContent = content.([]interface{})
 		} else {
-			return nil, "", 0, &PageDoesntExistError{}
+			return nil, "", 0, PageDoesntExistError
 		}
 	} else {
 		content := getValue(response, continuationContentPath)
 		if content != nil {
 			responseContent = content.([]interface{})
 		} else {
-			return nil, "", 0, &PageDoesntExistError{}
+			return nil, "", 0, PageDoesntExistError
 		}
 	}
 
