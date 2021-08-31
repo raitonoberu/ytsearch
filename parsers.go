@@ -90,28 +90,28 @@ func parseSource(
 	return responseSource, continuationKey, estimatedResults, nil
 }
 
-// getComponents splits source into various components.
-func getComponents(responseSource []map[string]interface{}) *SearchResult {
+// parseComponents splits source into various components.
+func parseComponents(responseSource []map[string]interface{}) *SearchResult {
 	result := &SearchResult{}
 
 	for _, element := range responseSource {
 		if videoElement, ok := element[videoElementKey]; ok {
-			videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
+			videoComponent := parseVideoComponent(videoElement.(map[string]interface{}))
 			result.Videos = append(result.Videos, videoComponent)
 			continue
 		}
 		if channelElement, ok := element[channelElementKey]; ok {
-			channelComponent := getChannelComponent(channelElement.(map[string]interface{}))
+			channelComponent := parseChannelComponent(channelElement.(map[string]interface{}))
 			result.Channels = append(result.Channels, channelComponent)
 			continue
 		}
 		if playlistElement, ok := element[playlistElementKey]; ok {
-			playlistComponent := getPlaylistComponent(playlistElement.(map[string]interface{}))
+			playlistComponent := parsePlaylistComponent(playlistElement.(map[string]interface{}))
 			result.Playlists = append(result.Playlists, playlistComponent)
 			continue
 		}
 		if shelfElement, ok := element[shelfElementKey]; ok {
-			shelfComponent := getShelfComponent(shelfElement.(map[string]interface{}))
+			shelfComponent := parseShelfComponent(shelfElement.(map[string]interface{}))
 			result.Shelves = append(result.Shelves, shelfComponent)
 			continue
 		}
@@ -119,7 +119,7 @@ func getComponents(responseSource []map[string]interface{}) *SearchResult {
 			// initial fallback handling for FindVideos
 			if richItemElementContent, ok := richItemElement.(map[string]interface{})["content"]; ok {
 				if videoElement, ok := richItemElementContent.(map[string]interface{})[videoElementKey]; ok {
-					videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
+					videoComponent := parseVideoComponent(videoElement.(map[string]interface{}))
 					result.Videos = append(result.Videos, videoComponent)
 				}
 			}
@@ -129,7 +129,7 @@ func getComponents(responseSource []map[string]interface{}) *SearchResult {
 	return result
 }
 
-func getVideoComponent(video map[string]interface{}) *VideoItem {
+func parseVideoComponent(video map[string]interface{}) *VideoItem {
 	item := &VideoItem{}
 	if id := getValue(video, path{"videoId"}); id != nil {
 		item.Id = id.(string)
@@ -186,7 +186,7 @@ func getVideoComponent(video map[string]interface{}) *VideoItem {
 	return item
 }
 
-func getChannelComponent(channel map[string]interface{}) *ChannelItem {
+func parseChannelComponent(channel map[string]interface{}) *ChannelItem {
 	item := &ChannelItem{}
 	if id := getValue(channel, path{"channelId"}); id != nil {
 		item.Id = id.(string)
@@ -216,7 +216,7 @@ func getChannelComponent(channel map[string]interface{}) *ChannelItem {
 	return item
 }
 
-func getPlaylistComponent(playlist map[string]interface{}) *PlaylistItem {
+func parsePlaylistComponent(playlist map[string]interface{}) *PlaylistItem {
 	item := &PlaylistItem{}
 	if id := getValue(playlist, path{"playlistId"}); id != nil {
 		item.Id = id.(string)
@@ -248,7 +248,7 @@ func getPlaylistComponent(playlist map[string]interface{}) *PlaylistItem {
 	return item
 }
 
-func getShelfComponent(shelf map[string]interface{}) *ShelfItem {
+func parseShelfComponent(shelf map[string]interface{}) *ShelfItem {
 	item := &ShelfItem{}
 	if title := getValue(shelf, path{"title", "simpleText"}); title != nil {
 		item.Title = title.(string)
@@ -256,14 +256,14 @@ func getShelfComponent(shelf map[string]interface{}) *ShelfItem {
 	items := getValue(shelf, path{"content", "verticalListRenderer", "items"})
 	for _, shelfItem := range items.([]interface{}) {
 		if videoElement, ok := shelfItem.(map[string]interface{})[videoElementKey]; ok {
-			videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
+			videoComponent := parseVideoComponent(videoElement.(map[string]interface{}))
 			item.Items = append(item.Items, videoComponent)
 		}
 	}
 	return item
 }
 
-func getSuggestions(response map[string]interface{}) []string {
+func parseSuggestions(response map[string]interface{}) []string {
 	suggestions := response["refinements"]
 	if suggestions == nil {
 		return []string{}

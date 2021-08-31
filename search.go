@@ -23,7 +23,7 @@ type SearchClient struct {
 	HTTPClient *http.Client
 
 	continuationKey string
-	newPage bool
+	newPage         bool
 }
 
 // makeRequest makes HTTP POST request and returns result as a map.
@@ -102,12 +102,12 @@ func (search *SearchClient) Next() (*SearchResult, error) {
 		return nil, err
 	}
 
-	result := getComponents(responseSource)
+	result := parseComponents(responseSource)
 	result.EstimatedResults = estimatedResults
-	result.Suggestions = getSuggestions(response)
+	result.Suggestions = parseSuggestions(response)
 
 	search.continuationKey = continuationKey
 	search.newPage = true
-	
+
 	return result, nil
 }
