@@ -10,8 +10,6 @@
 go get github.com/raitonoberu/ytsearch
 ```
 
-Please note that the API is not yet final and may change in the future.
-
 ## Usage
 
 ### Search for videos only
