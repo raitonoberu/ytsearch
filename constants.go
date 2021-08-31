@@ -8,18 +8,3 @@ var requestHeader = map[string][]string{
 }
 
 const searchKey = "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
-const itemSectionKey = "itemSectionRenderer"
-const videoElementKey = "videoRenderer"
-const channelElementKey = "channelRenderer"
-const playlistElementKey = "playlistRenderer"
-const shelfElementKey = "shelfRenderer"
-const richItemKey = "richItemRenderer"
-const continuationItemKey = "continuationItemRenderer"
-
-var contentPath = path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents"}
-
-var fallbackContentPath = path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "richGridRenderer", "contents"}
-
-var continuationContentPath = path{"onResponseReceivedCommands", 0, "appendContinuationItemsAction", "continuationItems"}
-
-var continuationKeyPath = path{"continuationItemRenderer", "continuationEndpoint", "continuationCommand", "token"}

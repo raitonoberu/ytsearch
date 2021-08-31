@@ -40,14 +40,14 @@ func parseSource(
 ) ([]map[string]interface{}, string, int, error) {
 	var responseContent []interface{}
 	if !newPage {
-		content := getValue(response, contentPath)
+		content := getValue(response, path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents"})
 		if content != nil {
 			responseContent = content.([]interface{})
 		} else {
 			return nil, "", 0, PageDoesntExistError
 		}
 	} else {
-		content := getValue(response, continuationContentPath)
+		content := getValue(response, path{"onResponseReceivedCommands", 0, "appendContinuationItemsAction", "continuationItems"})
 		if content != nil {
 			responseContent = content.([]interface{})
 		} else {
@@ -66,21 +66,21 @@ func parseSource(
 
 	if responseContent != nil {
 		for _, element := range responseContentMaps {
-			if _, ok := element[itemSectionKey]; ok {
-				newSource := getValue(element, path{itemSectionKey, "contents"}).([]interface{})
+			if _, ok := element["itemSectionRenderer"]; ok {
+				newSource := getValue(element, path{"itemSectionRenderer", "contents"}).([]interface{})
 				// converting []interface{} to []map[string]interface{}
 				responseSource = responseSource[:0]
 				for _, value := range newSource {
 					responseSource = append(responseSource, value.(map[string]interface{}))
 				}
 			}
-			if _, ok := element[continuationItemKey]; ok {
-				continuationKey = getValue(element, continuationKeyPath).(string)
+			if _, ok := element["continuationItemRenderer"]; ok {
+				continuationKey = getValue(element, path{"continuationItemRenderer", "continuationEndpoint", "continuationCommand", "token"}).(string)
 			}
 		}
 	} else {
-		responseSource = getValue(responseContent, fallbackContentPath).([]map[string]interface{})
-		continuationKey = getValue(responseSource, continuationKeyPath).(string)
+		responseSource = getValue(responseContent, path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "richGridRenderer", "contents"}).([]map[string]interface{})
+		continuationKey = getValue(responseSource, path{"continuationItemRenderer", "continuationEndpoint", "continuationCommand", "token"}).(string)
 	}
 
 	estimatedResults, _ := strconv.Atoi(
@@ -95,30 +95,30 @@ func parseComponents(responseSource []map[string]interface{}) *SearchResult {
 	result := &SearchResult{}
 
 	for _, element := range responseSource {
-		if videoElement, ok := element[videoElementKey]; ok {
+		if videoElement, ok := element["videoRenderer"]; ok {
 			videoComponent := parseVideoComponent(videoElement.(map[string]interface{}))
 			result.Videos = append(result.Videos, videoComponent)
 			continue
 		}
-		if channelElement, ok := element[channelElementKey]; ok {
+		if channelElement, ok := element["channelRenderer"]; ok {
 			channelComponent := parseChannelComponent(channelElement.(map[string]interface{}))
 			result.Channels = append(result.Channels, channelComponent)
 			continue
 		}
-		if playlistElement, ok := element[playlistElementKey]; ok {
+		if playlistElement, ok := element["playlistRenderer"]; ok {
 			playlistComponent := parsePlaylistComponent(playlistElement.(map[string]interface{}))
 			result.Playlists = append(result.Playlists, playlistComponent)
 			continue
 		}
-		if shelfElement, ok := element[shelfElementKey]; ok {
+		if shelfElement, ok := element["shelfRenderer"]; ok {
 			shelfComponent := parseShelfComponent(shelfElement.(map[string]interface{}))
 			result.Shelves = append(result.Shelves, shelfComponent)
 			continue
 		}
-		if richItemElement, ok := element[richItemKey]; ok {
+		if richItemElement, ok := element["richItemRenderer"]; ok {
 			// initial fallback handling for FindVideos
 			if richItemElementContent, ok := richItemElement.(map[string]interface{})["content"]; ok {
-				if videoElement, ok := richItemElementContent.(map[string]interface{})[videoElementKey]; ok {
+				if videoElement, ok := richItemElementContent.(map[string]interface{})["videoRenderer"]; ok {
 					videoComponent := parseVideoComponent(videoElement.(map[string]interface{}))
 					result.Videos = append(result.Videos, videoComponent)
 				}
@@ -255,7 +255,7 @@ func parseShelfComponent(shelf map[string]interface{}) *ShelfItem {
 	}
 	items := getValue(shelf, path{"content", "verticalListRenderer", "items"})
 	for _, shelfItem := range items.([]interface{}) {
-		if videoElement, ok := shelfItem.(map[string]interface{})[videoElementKey]; ok {
+		if videoElement, ok := shelfItem.(map[string]interface{})["videoRenderer"]; ok {
 			videoComponent := parseVideoComponent(videoElement.(map[string]interface{}))
 			item.Items = append(item.Items, videoComponent)
 		}
