@@ -7,16 +7,10 @@ import "net/http"
 func Search(query string) *SearchClient {
 	return &SearchClient{
 		Query:           query,
-		Limit:           0,
 		Language:        "en",
 		Region:          "US",
 		SearchFilter:    NoFilter,
 		SortOrder:       RelevanceOrder,
-		FindVideos:      true,
-		FindChannels:    true,
-		FindPlaylists:   true,
-		FindShelves:     true,
-		FindSuggestions: true,
 		HTTPClient:      &http.Client{},
 	}
 }
@@ -25,12 +19,10 @@ func Search(query string) *SearchClient {
 func VideoSearch(query string) *SearchClient {
 	return &SearchClient{
 		Query:        query,
-		Limit:        0,
 		Language:     "en",
 		Region:       "US",
 		SearchFilter: VideoFilter,
 		SortOrder:    RelevanceOrder,
-		FindVideos:   true,
 		HTTPClient:   &http.Client{},
 	}
 }
@@ -39,12 +31,10 @@ func VideoSearch(query string) *SearchClient {
 func ChannelSearch(query string) *SearchClient {
 	return &SearchClient{
 		Query:        query,
-		Limit:        0,
 		Language:     "en",
 		Region:       "US",
 		SearchFilter: ChannelFilter,
 		SortOrder:    RelevanceOrder,
-		FindChannels: true,
 		HTTPClient:   &http.Client{},
 	}
 }
@@ -53,12 +43,10 @@ func ChannelSearch(query string) *SearchClient {
 func PlaylistSearch(query string) *SearchClient {
 	return &SearchClient{
 		Query:         query,
-		Limit:         0,
 		Language:      "en",
 		Region:        "US",
 		SearchFilter:  PlaylistFilter,
 		SortOrder:     RelevanceOrder,
-		FindPlaylists: true,
 		HTTPClient:    &http.Client{},
 	}
 }

@@ -6,13 +6,11 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 )
 
 type SearchClient struct {
 	Query string // required
 
-	Limit    int    // default: 0
 	Language string // default: en
 	Region   string // default: US
 
@@ -22,15 +20,10 @@ type SearchClient struct {
 	// CustomParams allows you to copy and paste params from YouTube.
 	CustomParams string
 
-	FindVideos      bool
-	FindChannels    bool
-	FindPlaylists   bool
-	FindShelves     bool
-	FindSuggestions bool
-
 	HTTPClient *http.Client
 
 	continuationKey string
+	newPage bool
 }
 
 // makeRequest makes HTTP POST request and returns result as a map.
@@ -87,134 +80,15 @@ func (search *SearchClient) makeRequest() (map[string]interface{}, error) {
 	return objmap, nil
 }
 
-// parseSource extracts content from response.
-func (search *SearchClient) parseSource(
-	response map[string]interface{},
-) ([]map[string]interface{}, int, error) {
-	var responseContent []interface{}
-	if search.continuationKey == "" {
-		content := getValue(response, contentPath)
-		if content != nil {
-			responseContent = content.([]interface{})
-		} else {
-			return nil, 0, &PageDoesntExistError{}
-		}
-	} else {
-		content := getValue(response, continuationContentPath)
-		if content != nil {
-			responseContent = content.([]interface{})
-		} else {
-			return nil, 0, &PageDoesntExistError{}
-		}
+// NextExists returns whether the Next call will return new content.
+func (search *SearchClient) NextExists() bool {
+	if !search.newPage {
+		return true
 	}
-
-	// converting []interface{} to []map[string]interface{}
-	responseContentMaps := make([]map[string]interface{}, len(responseContent))
-	for index, value := range responseContent {
-		responseContentMaps[index] = value.(map[string]interface{})
+	if search.continuationKey != "" {
+		return true
 	}
-
-	var responseSource []map[string]interface{}
-	if responseContent != nil {
-		for _, element := range responseContentMaps {
-			if _, ok := element[itemSectionKey]; ok {
-				newSource := getValue(element, path{itemSectionKey, "contents"}).([]interface{})
-				// converting []interface{} to []map[string]interface{}
-				responseSource = responseSource[:0]
-				for _, value := range newSource {
-					responseSource = append(responseSource, value.(map[string]interface{}))
-				}
-			}
-			if _, ok := element[continuationItemKey]; ok {
-				search.continuationKey = getValue(element, continuationKeyPath).(string)
-			}
-		}
-	} else {
-		responseSource = getValue(responseContent, fallbackContentPath).([]map[string]interface{})
-		search.continuationKey = getValue(responseSource, continuationKeyPath).(string)
-	}
-
-	estimatedResults, _ := strconv.Atoi(
-		getValue(response, path{"estimatedResults"}).(string),
-	)
-
-	return responseSource, estimatedResults, nil
-}
-
-// getComponents splits source into various components.
-func (search *SearchClient) getComponents(responseSource []map[string]interface{}) *SearchResult {
-	result := &SearchResult{}
-	if search.FindVideos {
-		result.Videos = []*VideoItem{}
-	}
-	if search.FindChannels {
-		result.Channels = []*ChannelItem{}
-	}
-	if search.FindPlaylists {
-		result.Playlists = []*PlaylistItem{}
-	}
-	if search.FindShelves {
-		result.Shelves = []*ShelfItem{}
-	}
-
-	for _, element := range responseSource {
-		if videoElement, ok := element[videoElementKey]; ok {
-			if search.FindVideos {
-				videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
-				result.Videos = append(result.Videos, videoComponent)
-				if search.Limit != 0 && len(result.Videos) >= search.Limit {
-					break
-				}
-			}
-			continue
-		}
-		if channelElement, ok := element[channelElementKey]; ok {
-			if search.FindChannels {
-				channelComponent := getChannelComponent(channelElement.(map[string]interface{}))
-				result.Channels = append(result.Channels, channelComponent)
-				if search.Limit != 0 && len(result.Channels) >= search.Limit {
-					break
-				}
-			}
-			continue
-		}
-		if playlistElement, ok := element[playlistElementKey]; ok {
-			if search.FindPlaylists {
-				playlistComponent := getPlaylistComponent(playlistElement.(map[string]interface{}))
-				result.Playlists = append(result.Playlists, playlistComponent)
-				if search.Limit != 0 && len(result.Playlists) >= search.Limit {
-					break
-				}
-			}
-			continue
-		}
-		if shelfElement, ok := element[shelfElementKey]; ok {
-			if search.FindShelves {
-				shelfComponent := getShelfComponent(shelfElement.(map[string]interface{}))
-				result.Shelves = append(result.Shelves, shelfComponent)
-				if search.Limit != 0 && len(result.Shelves) >= search.Limit {
-					break
-				}
-			}
-			continue
-		}
-		if richItemElement, ok := element[richItemKey]; ok {
-			if search.FindVideos {
-				// initial fallback handling for FindVideos
-				if richItemElementContent, ok := richItemElement.(map[string]interface{})["content"]; ok {
-					if videoElement, ok := richItemElementContent.(map[string]interface{})[videoElementKey]; ok {
-						videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
-						result.Videos = append(result.Videos, videoComponent)
-					}
-				}
-				if search.Limit != 0 && len(result.Videos) >= search.Limit {
-					break
-				}
-			}
-			continue
-		}
-	}
-	return result
+	return false
 }
 
 // Next returns content from the next page.
@@ -223,15 +97,17 @@ func (search *SearchClient) Next() (*SearchResult, error) {
 	if err != nil {
 		return nil, err
 	}
-	responseSource, estimatedResults, err := search.parseSource(response)
+	responseSource, continuationKey, estimatedResults, err := parseSource(response, search.newPage)
 	if err != nil {
 		return nil, err
 	}
 
-	result := search.getComponents(responseSource)
+	result := getComponents(responseSource)
 	result.EstimatedResults = estimatedResults
-	if search.FindSuggestions {
-		result.Suggestions = getSuggestions(response)
-	}
+	result.Suggestions = getSuggestions(response)
+
+	search.continuationKey = continuationKey
+	search.newPage = true
+	
 	return result, nil
 }

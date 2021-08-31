@@ -33,6 +33,102 @@ func getValue(source interface{}, path path) interface{} {
 	return value
 }
 
+// parseSource extracts content from response.
+func parseSource(
+	response map[string]interface{},
+	newPage bool,
+) ([]map[string]interface{}, string, int, error) {
+	var responseContent []interface{}
+	if !newPage {
+		content := getValue(response, contentPath)
+		if content != nil {
+			responseContent = content.([]interface{})
+		} else {
+			return nil, "", 0, &PageDoesntExistError{}
+		}
+	} else {
+		content := getValue(response, continuationContentPath)
+		if content != nil {
+			responseContent = content.([]interface{})
+		} else {
+			return nil, "", 0, &PageDoesntExistError{}
+		}
+	}
+
+	// converting []interface{} to []map[string]interface{}
+	responseContentMaps := make([]map[string]interface{}, len(responseContent))
+	for index, value := range responseContent {
+		responseContentMaps[index] = value.(map[string]interface{})
+	}
+
+	var responseSource []map[string]interface{}
+	var continuationKey string
+
+	if responseContent != nil {
+		for _, element := range responseContentMaps {
+			if _, ok := element[itemSectionKey]; ok {
+				newSource := getValue(element, path{itemSectionKey, "contents"}).([]interface{})
+				// converting []interface{} to []map[string]interface{}
+				responseSource = responseSource[:0]
+				for _, value := range newSource {
+					responseSource = append(responseSource, value.(map[string]interface{}))
+				}
+			}
+			if _, ok := element[continuationItemKey]; ok {
+				continuationKey = getValue(element, continuationKeyPath).(string)
+			}
+		}
+	} else {
+		responseSource = getValue(responseContent, fallbackContentPath).([]map[string]interface{})
+		continuationKey = getValue(responseSource, continuationKeyPath).(string)
+	}
+
+	estimatedResults, _ := strconv.Atoi(
+		getValue(response, path{"estimatedResults"}).(string),
+	)
+
+	return responseSource, continuationKey, estimatedResults, nil
+}
+
+// getComponents splits source into various components.
+func getComponents(responseSource []map[string]interface{}) *SearchResult {
+	result := &SearchResult{}
+
+	for _, element := range responseSource {
+		if videoElement, ok := element[videoElementKey]; ok {
+			videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
+			result.Videos = append(result.Videos, videoComponent)
+			continue
+		}
+		if channelElement, ok := element[channelElementKey]; ok {
+			channelComponent := getChannelComponent(channelElement.(map[string]interface{}))
+			result.Channels = append(result.Channels, channelComponent)
+			continue
+		}
+		if playlistElement, ok := element[playlistElementKey]; ok {
+			playlistComponent := getPlaylistComponent(playlistElement.(map[string]interface{}))
+			result.Playlists = append(result.Playlists, playlistComponent)
+			continue
+		}
+		if shelfElement, ok := element[shelfElementKey]; ok {
+			shelfComponent := getShelfComponent(shelfElement.(map[string]interface{}))
+			result.Shelves = append(result.Shelves, shelfComponent)
+			continue
+		}
+		if richItemElement, ok := element[richItemKey]; ok {
+			// initial fallback handling for FindVideos
+			if richItemElementContent, ok := richItemElement.(map[string]interface{})["content"]; ok {
+				if videoElement, ok := richItemElementContent.(map[string]interface{})[videoElementKey]; ok {
+					videoComponent := getVideoComponent(videoElement.(map[string]interface{}))
+					result.Videos = append(result.Videos, videoComponent)
+				}
+			}
+			continue
+		}
+	}
+	return result
+}
+
 func getVideoComponent(video map[string]interface{}) *VideoItem {
 	item := &VideoItem{}
 	if id := getValue(video, path{"videoId"}); id != nil {
