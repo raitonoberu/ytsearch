@@ -6,12 +6,12 @@ import "net/http"
 // Search creates a new SearchClient with default parameters.
 func Search(query string) *SearchClient {
 	return &SearchClient{
-		Query:           query,
-		Language:        "en",
-		Region:          "US",
-		SearchFilter:    NoFilter,
-		SortOrder:       RelevanceOrder,
-		HTTPClient:      &http.Client{},
+		Query:        query,
+		Language:     "en",
+		Region:       "US",
+		SearchFilter: NoFilter,
+		SortOrder:    RelevanceOrder,
+		HTTPClient:   &http.Client{},
 	}
 }
 
@@ -42,11 +42,11 @@ func ChannelSearch(query string) *SearchClient {
 // PlaylistSearch creates a new SearchClient for playlist search.
 func PlaylistSearch(query string) *SearchClient {
 	return &SearchClient{
-		Query:         query,
-		Language:      "en",
-		Region:        "US",
-		SearchFilter:  PlaylistFilter,
-		SortOrder:     RelevanceOrder,
-		HTTPClient:    &http.Client{},
+		Query:        query,
+		Language:     "en",
+		Region:       "US",
+		SearchFilter: PlaylistFilter,
+		SortOrder:    RelevanceOrder,
+		HTTPClient:   &http.Client{},
 	}
 }
