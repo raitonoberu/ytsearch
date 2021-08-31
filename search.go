@@ -54,24 +54,24 @@ func (search *SearchClient) makeRequest() (map[string]interface{}, error) {
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("couldn't marshal payload: %w", err)
 	}
 	url := "https://www.youtube.com/youtubei/v1/search?key=" + searchKey
 	request, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("couldn't create request: %w", err)
 	}
 	request.Header = requestHeader
 	response, err := search.HTTPClient.Do(request)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("request failed: %w", err)
 	}
 	defer response.Body.Close()
 
 	var result map[string]interface{}
 	err = json.NewDecoder(response.Body).Decode(&result)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("couldn't decode JSON: %w", err)
 	}
 	return result, nil
 }
@@ -89,14 +89,14 @@ func (search *SearchClient) NextExists() bool {
 
 // Next returns content from the next page.
 func (search *SearchClient) Next() (*SearchResult, error) {
+	if !search.NextExists() {
+		return nil, PageDoesntExistError
+	}
 	response, err := search.makeRequest()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("makeRequest failed: %w", err)
 	}
-	responseSource, continuationKey, estimatedResults, err := parseSource(response, search.newPage)
-	if err != nil {
-		return nil, err
-	}
+	responseSource, continuationKey, estimatedResults := parseSource(response, search.newPage)
 
 	result := parseComponents(responseSource)
 	result.EstimatedResults = estimatedResults

@@ -34,24 +34,21 @@ func getValue(source interface{}, path path) interface{} {
 }
 
 // parseSource extracts content from response.
-func parseSource(
-	response map[string]interface{},
-	newPage bool,
-) ([]map[string]interface{}, string, int, error) {
+func parseSource(response interface{}, newPage bool) ([]map[string]interface{}, string, int) {
 	var responseContent []interface{}
 	if !newPage {
 		content := getValue(response, path{"contents", "twoColumnSearchResultsRenderer", "primaryContents", "sectionListRenderer", "contents"})
 		if content != nil {
 			responseContent = content.([]interface{})
 		} else {
-			return nil, "", 0, PageDoesntExistError
+			return nil, "", 0
 		}
 	} else {
 		content := getValue(response, path{"onResponseReceivedCommands", 0, "appendContinuationItemsAction", "continuationItems"})
 		if content != nil {
 			responseContent = content.([]interface{})
 		} else {
-			return nil, "", 0, PageDoesntExistError
+			return nil, "", 0
 		}
 	}
 
@@ -87,7 +84,7 @@ func parseSource(
 		getValue(response, path{"estimatedResults"}).(string),
 	)
 
-	return responseSource, continuationKey, estimatedResults, nil
+	return responseSource, continuationKey, estimatedResults
 }
 
 // parseComponents splits source into various components.
