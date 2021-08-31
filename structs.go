@@ -1,7 +1,7 @@
 package ytsearch
 
 type SearchResult struct {
-	EstimatedResults int             `json:"estimated_results"`
+	EstimatedResults int             `json:"estimatedResults"`
 	Videos           []*VideoItem    `json:"videos"`
 	Channels         []*ChannelItem  `json:"channels"`
 	Playlists        []*PlaylistItem `json:"playlists"`
@@ -12,11 +12,11 @@ type SearchResult struct {
 type VideoItem struct {
 	Id            string      `json:"id"`
 	Title         string      `json:"title"`
-	PublishedTime string      `json:"published_time"`
+	PublishedTime string      `json:"publishedTime"`
 	Duration      int         `json:"duration"`
 	ViewCount     int         `json:"view_count"`
 	Thumbnails    []Thumbnail `json:"thumbnails"`
-	RichThumbnail Thumbnail   `json:"rich_thumbnail"`
+	RichThumbnail Thumbnail   `json:"richThumbnail"`
 	Description   string      `json:"description"`
 	Channel       Channel     `json:"channel"`
 	Link          string      `json:"link"`
@@ -53,8 +53,8 @@ type Thumbnail struct {
 }
 
 type Channel struct {
-	Id         string       `json:"id"`
-	Title      string       `json:"title"`
+	Id         string      `json:"id"`
+	Title      string      `json:"title"`
 	Thumbnails []Thumbnail `json:"thumbnails,omitempty"`
-	Link       string       `json:"link"`
+	Link       string      `json:"link"`
 }
