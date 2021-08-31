@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -68,16 +67,13 @@ func (search *SearchClient) makeRequest() (map[string]interface{}, error) {
 		return nil, err
 	}
 	defer response.Body.Close()
-	text, err := ioutil.ReadAll(response.Body)
+
+	var result map[string]interface{}
+	err = json.NewDecoder(response.Body).Decode(&result)
 	if err != nil {
 		return nil, err
 	}
-	var objmap map[string]interface{}
-	err = json.Unmarshal(text, &objmap)
-	if err != nil {
-		return nil, err
-	}
-	return objmap, nil
+	return result, nil
 }
 
 // NextExists returns whether the Next call will return new content.
