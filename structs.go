@@ -10,35 +10,35 @@ type SearchResult struct {
 }
 
 type VideoItem struct {
-	Id            string      `json:"id"`
+	ID            string      `json:"id"`
 	Title         string      `json:"title"`
 	PublishedTime string      `json:"publishedTime"`
 	Duration      int         `json:"duration"`
-	ViewCount     int         `json:"view_count"`
+	ViewCount     int         `json:"viewCount"`
 	Thumbnails    []Thumbnail `json:"thumbnails"`
 	RichThumbnail Thumbnail   `json:"richThumbnail"`
 	Description   string      `json:"description"`
 	Channel       Channel     `json:"channel"`
-	Link          string      `json:"link"`
+	URL           string      `json:"url"`
 }
 
 type ChannelItem struct {
-	Id          string      `json:"id"`
+	ID          string      `json:"id"`
 	Title       string      `json:"title"`
 	Thumbnails  []Thumbnail `json:"thumbnails"`
 	VideoCount  int         `json:"videoCount"`
 	Description string      `json:"description"`
 	Subscribers string      `json:"subscribers"`
-	Link        string      `json:"link"`
+	URL         string      `json:"url"`
 }
 
 type PlaylistItem struct {
-	Id         string      `json:"id"`
+	ID         string      `json:"id"`
 	Title      string      `json:"title"`
 	VideoCount int         `json:"videoCount"`
 	Channel    Channel     `json:"channel"`
 	Thumbnails []Thumbnail `json:"thumbnails"`
-	Link       string      `json:"link"`
+	URL        string      `json:"url"`
 }
 
 type ShelfItem struct {
@@ -47,14 +47,14 @@ type ShelfItem struct {
 }
 
 type Thumbnail struct {
-	Url    string `json:"url"`
+	URL    string `json:"url"`
 	Height int    `json:"height"`
 	Width  int    `json:"width"`
 }
 
 type Channel struct {
-	Id         string      `json:"id"`
+	ID         string      `json:"id"`
 	Title      string      `json:"title"`
-	Thumbnails []Thumbnail `json:"thumbnails,omitempty"`
-	Link       string      `json:"link"`
+	Thumbnails []Thumbnail `json:"thumbnails"`
+	URL        string      `json:"url"`
 }

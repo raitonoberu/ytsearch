@@ -47,8 +47,8 @@ func TestVideoSearch(t *testing.T) {
 	if len(result.Videos) != 20 {
 		t.Error("len(result.Videos) != 20")
 	}
-	if result.Videos[0].Id == "" {
-		t.Error("result.Videos[0].Id == \"\"")
+	if result.Videos[0].ID == "" {
+		t.Error("result.Videos[0].ID == \"\"")
 	}
 }
 
@@ -62,8 +62,8 @@ func TestChannelSearch(t *testing.T) {
 	if len(result.Channels) != 20 {
 		t.Error("len(result.Channels) != 20")
 	}
-	if result.Channels[0].Id == "" {
-		t.Error("result.Channels[0].Id == \"\"")
+	if result.Channels[0].ID == "" {
+		t.Error("result.Channels[0].ID == \"\"")
 	}
 }
 
@@ -77,8 +77,8 @@ func TestPlaylistSearch(t *testing.T) {
 	if len(result.Playlists) != 20 {
 		t.Error("len(result.Playlists) != 20")
 	}
-	if result.Playlists[0].Id == "" {
-		t.Error("result.Playlists[0].Id == \"\"")
+	if result.Playlists[0].ID == "" {
+		t.Error("result.Playlists[0].ID == \"\"")
 	}
 }
 
@@ -120,7 +120,7 @@ func TestSortOrder(t *testing.T) {
 		t.Error("len(result2.Videos) == 0")
 	}
 
-	if result1.Videos[0].Id == result2.Videos[0].Id {
+	if result1.Videos[0].ID == result2.Videos[0].ID {
 		t.Error("SortOrder param doesn't work")
 	}
 }

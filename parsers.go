@@ -132,8 +132,8 @@ func parseComponents(responseSource []map[string]interface{}) *SearchResult {
 func parseVideoComponent(video map[string]interface{}) *VideoItem {
 	item := &VideoItem{}
 	if id := getValue(video, path{"videoId"}); id != nil {
-		item.Id = id.(string)
-		item.Link = "https://www.youtube.com/watch?v=" + item.Id
+		item.ID = id.(string)
+		item.URL = "https://www.youtube.com/watch?v=" + item.ID
 	}
 	if title := getValue(video, path{"title", "runs", 0, "text"}); title != nil {
 		item.Title = title.(string)
@@ -150,7 +150,7 @@ func parseVideoComponent(video map[string]interface{}) *VideoItem {
 	if thumbnails := getValue(video, path{"thumbnail", "thumbnails"}); thumbnails != nil {
 		for _, thumbnail := range thumbnails.([]interface{}) {
 			item.Thumbnails = append(item.Thumbnails, Thumbnail{
-				Url:    thumbnail.(map[string]interface{})["url"].(string),
+				URL:    thumbnail.(map[string]interface{})["url"].(string),
 				Height: int(thumbnail.(map[string]interface{})["height"].(float64)),
 				Width:  int(thumbnail.(map[string]interface{})["width"].(float64)),
 			})
@@ -158,7 +158,7 @@ func parseVideoComponent(video map[string]interface{}) *VideoItem {
 	}
 	if richThumbnail := getValue(video, path{"richThumbnail", "movingThumbnailRenderer", "movingThumbnailDetails", "thumbnails", 0}); richThumbnail != nil {
 		item.RichThumbnail = Thumbnail{
-			Url:    richThumbnail.(map[string]interface{})["url"].(string),
+			URL:    richThumbnail.(map[string]interface{})["url"].(string),
 			Height: int(richThumbnail.(map[string]interface{})["height"].(float64)),
 			Width:  int(richThumbnail.(map[string]interface{})["width"].(float64)),
 		}
@@ -171,13 +171,13 @@ func parseVideoComponent(video map[string]interface{}) *VideoItem {
 		item.Channel.Title = channelTitle.(string)
 	}
 	if channelId := getValue(video, path{"ownerText", "runs", 0, "navigationEndpoint", "browseEndpoint", "browseId"}); channelId != nil {
-		item.Channel.Id = channelId.(string)
-		item.Channel.Link = "https://www.youtube.com/channel/" + item.Channel.Id
+		item.Channel.ID = channelId.(string)
+		item.Channel.URL = "https://www.youtube.com/channel/" + item.Channel.ID
 	}
 	if channelThumbnails := getValue(video, path{"channelThumbnailSupportedRenderers", "channelThumbnailWithLinkRenderer", "thumbnail", "thumbnails"}); channelThumbnails != nil {
 		for _, thumbnail := range channelThumbnails.([]interface{}) {
 			item.Channel.Thumbnails = append(item.Channel.Thumbnails, Thumbnail{
-				Url:    thumbnail.(map[string]interface{})["url"].(string),
+				URL:    thumbnail.(map[string]interface{})["url"].(string),
 				Height: int(thumbnail.(map[string]interface{})["height"].(float64)),
 				Width:  int(thumbnail.(map[string]interface{})["width"].(float64)),
 			})
@@ -189,8 +189,8 @@ func parseVideoComponent(video map[string]interface{}) *VideoItem {
 func parseChannelComponent(channel map[string]interface{}) *ChannelItem {
 	item := &ChannelItem{}
 	if id := getValue(channel, path{"channelId"}); id != nil {
-		item.Id = id.(string)
-		item.Link = "https://www.youtube.com/channel/" + item.Id
+		item.ID = id.(string)
+		item.URL = "https://www.youtube.com/channel/" + item.ID
 	}
 	if title := getValue(channel, path{"title", "simpleText"}); title != nil {
 		item.Title = title.(string)
@@ -198,7 +198,7 @@ func parseChannelComponent(channel map[string]interface{}) *ChannelItem {
 	if thumbnails := getValue(channel, path{"thumbnail", "thumbnails"}); thumbnails != nil {
 		for _, thumbnail := range thumbnails.([]interface{}) {
 			item.Thumbnails = append(item.Thumbnails, Thumbnail{
-				Url:    "http:" + thumbnail.(map[string]interface{})["url"].(string),
+				URL:    "http:" + thumbnail.(map[string]interface{})["url"].(string),
 				Height: int(thumbnail.(map[string]interface{})["height"].(float64)),
 				Width:  int(thumbnail.(map[string]interface{})["width"].(float64)),
 			})
@@ -219,8 +219,8 @@ func parseChannelComponent(channel map[string]interface{}) *ChannelItem {
 func parsePlaylistComponent(playlist map[string]interface{}) *PlaylistItem {
 	item := &PlaylistItem{}
 	if id := getValue(playlist, path{"playlistId"}); id != nil {
-		item.Id = id.(string)
-		item.Link = "https://www.youtube.com/playlist?list=" + item.Id
+		item.ID = id.(string)
+		item.URL = "https://www.youtube.com/playlist?list=" + item.ID
 	}
 	if title := getValue(playlist, path{"title", "simpleText"}); title != nil {
 		item.Title = title.(string)
@@ -233,13 +233,13 @@ func parsePlaylistComponent(playlist map[string]interface{}) *PlaylistItem {
 		item.Channel.Title = channelTitle.(string)
 	}
 	if channelId := getValue(playlist, path{"shortBylineText", "runs", 0, "navigationEndpoint", "browseEndpoint", "browseId"}); channelId != nil {
-		item.Channel.Id = channelId.(string)
-		item.Channel.Link = "https://www.youtube.com/channel/" + item.Channel.Id
+		item.Channel.ID = channelId.(string)
+		item.Channel.URL = "https://www.youtube.com/channel/" + item.Channel.ID
 	}
 	if thumbnails := getValue(playlist, path{"thumbnailRenderer", "playlistVideoThumbnailRenderer", "thumbnail", "thumbnails"}); thumbnails != nil {
 		for _, thumbnail := range thumbnails.([]interface{}) {
 			item.Thumbnails = append(item.Thumbnails, Thumbnail{
-				Url:    "http:" + thumbnail.(map[string]interface{})["url"].(string),
+				URL:    "http:" + thumbnail.(map[string]interface{})["url"].(string),
 				Height: int(thumbnail.(map[string]interface{})["height"].(float64)),
 				Width:  int(thumbnail.(map[string]interface{})["width"].(float64)),
 			})
